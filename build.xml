@@ -1,0 +1,97 @@
+<project name="ReceptionListener" basedir=".">
+
+	<property name="srcdir" value="${basedir}/src" />
+	<property name="libdir" value="${basedir}/lib" />
+	<property name="srctempdir" value="${basedir}/build/src" />
+	<property name="classesdir" value="${basedir}/build/classes" />
+	<property name="distdir" value="${basedir}/jar" />
+	<property name="metadir" value="${basedir}/meta" />
+	<property name="deploydir" value="deploy" />
+
+	<target name="compile">
+		<delete dir="${srctempdir}" />
+		<mkdir dir="${srctempdir}" />
+		<delete dir="${classesdir}" />
+		<mkdir dir="${classesdir}" />
+
+		<copy todir="${srctempdir}">
+			<fileset dir="${srcdir}" includes="**/*.java" />
+			<fileset dir="${srcdir}" includes="**/*.xml" />
+		</copy>
+
+		<javac srcdir="${srctempdir}" destdir="${classesdir}" encoding="ISO-8859-1" debug="true" includeantruntime="false">
+			<classpath>
+				<fileset dir="${libdir}" includes="*.jar" />
+				<fileset dir="${libdir}/rest" includes="*.jar" />
+			</classpath>
+		</javac>
+
+		<copy todir="${classesdir}">
+			<fileset dir="${srctempdir}" includes="**/*.xml" />
+			<fileset dir="${srctempdir}" includes="**/*.properties" />
+		</copy>
+	</target>
+
+	<target name="lib" depends="compile">
+		<mkdir dir="${distdir}" />
+		<delete file="${distdir}/ReceptionListenerJPGG.jar" />
+
+		<jar destfile="${distdir}/ReceptionListenerJPGG.jar">
+			<fileset dir="${classesdir}" />
+		</jar>
+	</target>
+
+	<target name="deploy" depends="compile, lib">
+		<delete dir="${deploydir}" />
+		<mkdir dir="${deploydir}" />
+
+		<copy file="${distdir}/ReceptionListenerJPGG.jar" todir="${deploydir}" />
+
+		<delete dir="${deploydir}/lib" />
+		<copy todir="${deploydir}/lib">
+			<fileset dir="${libdir}" includes="*.jar" />
+			<fileset dir="${libdir}/rest" includes="*.jar" />
+		</copy>
+	</target>
+
+	<target name="run">
+		<java classname="com.movix.listener.ReceptionListenerJPGG" fork="true" spawn="true" dir="${deploydir}">
+
+			<classpath>
+				<file file="${deploydir}/ReceptionListenerJPGG.jar" />
+				<fileset dir="${deploydir}/lib" includes="*.jar" />
+			</classpath>
+
+		</java>
+	</target>
+
+
+	<!-- Define the Sonar global properties (the most usual way is to pass these properties via the command line) -->
+	<property name="sonar.host.url" value="http://localhost:8080/sonar" />
+	<property name="sonar.jdbc.url" value="jdbc:postgresql://localhost/sonar" />
+	<property name="sonar.jdbc.username" value="sonar" />
+	<property name="sonar.jdbc.password" value="sonar" />
+
+	<!-- Define the Sonar project properties -->
+	<property name="sonar.projectKey" value="com.movix.listener:ReceptionListener" />
+	<property name="sonar.projectName" value="Reception Listener JPGG" />
+	<property name="sonar.projectVersion" value="1.0" />
+	<property name="sonar.language" value="java" />
+	<property name="sonar.sources" value="src" />
+	<property name="sonar.binaries" value="deploy/*.jar" />
+
+	<!-- Define the Sonar target -->
+	<target name="sonar" xmlns:sonar="antlib:org.sonar.ant">
+		<taskdef uri="antlib:org.sonar.ant" resource="org/sonar/ant/antlib.xml">
+			<!-- Update the following line, or put the "sonar-ant-task-*.jar" file in your "$HOME/.ant/lib" folder -->
+			<classpath path="/usr/share/ant/lib/sonar-ant-task-*.jar" />
+		</taskdef>
+
+		<!-- Execute Sonar -->
+		<sonar:sonar />
+	</target>
+
+</project>
+
+
+

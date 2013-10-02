@@ -1,0 +1,21 @@
+<configuration>
+
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/srv/produccion/log/ReceptionListenerJPGG.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+
+    <encoder>
+      <pattern>%-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender> 
+  
+  <logger name="org" level="ERROR"/>
+        
+  <root level="DEBUG">
+    <appender-ref ref="FILE" />
+  </root>
+
+</configuration>
