@@ -7,7 +7,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/slf4j-api-1.7.1.jar"/>
-	<classpathentry kind="lib" path="lib/movix-service-ats-client-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/movix-service-its-client-0.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/movix-service-shared-0.9.35.jar"/>
 	<classpathentry kind="lib" path="lib/movix-dev-shared-3.13.5.jar"/>
@@ -24,5 +23,6 @@
 	<classpathentry kind="lib" path="lib/logback-core-1.0.6.jar"/>
 	<classpathentry kind="lib" path="lib/rest/jackson-jaxrs-1.9.2-redhat-1.jar"/>
 	<classpathentry kind="lib" path="lib/rest/resteasy-jackson-provider-2.3.3.Final-redhat-1.jar"/>
+	<classpathentry kind="lib" path="lib/movix-service-ats-client-1.3.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

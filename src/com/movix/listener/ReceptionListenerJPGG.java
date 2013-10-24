@@ -5,20 +5,13 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.movixla.service.ats.client.ReceptionClient;
-import com.movixla.service.ats.client.ReceptionListener;
-import com.movixla.service.ats.common.ActionReception;
-import com.movixla.service.ats.common.Receptionable;
-import com.movixla.service.ats.common.ReceptionableVisitorAdapter;
-import com.movixla.service.ats.common.RechargeReception;
-import com.movixla.service.ats.common.SMSReception;
-import com.movixla.service.its.client.OutcomeListener;
-import com.movixla.service.its.client.SendingClient;
-import com.movixla.service.its.common.Outcome;
+import com.movixla.service.ats.client.ReceptionClientPro;
+import com.movixla.service.ats.client.ReceptionListenerPro;
+import com.movixla.service.ats.common.ReceptionablePro;
 
 public final class ReceptionListenerJPGG {
 
-    private static final String CLIENT_ID = "TEST_JPGG_CLIENT";
+    private static final String CLIENT_ID = "TEST_JPGG";
     private static final Logger LOGGER = LoggerFactory.getLogger(ReceptionListenerJPGG.class);
 
     private ReceptionListenerJPGG() {
@@ -26,40 +19,23 @@ public final class ReceptionListenerJPGG {
 
     public static void main(String[] args) {
 
-        new SendingClient(CLIENT_ID).onOutcomeResponse(new OutcomeListener() {
+        String[] filter = { "9999COsms/0", "1020COsms/0", "35555COsms/0" };
+        ReceptionListenerPro listener = new ReceptionListenerPro() {
 
             @Override
-            public void outcomeReceived(Outcome arg0) {
-                // LOGGER.debug("Outcome={}", arg0);
-            }
+            public void receive(List<ReceptionablePro> receptionables) {
 
-        });
-
-        ReceptionClient.getInstance(CLIENT_ID).onReception(new String[] { "5332ClaroSVsms/0" }, new ReceptionListener() {
-
-            @Override
-            public void receive(List<Receptionable> receptionables) {
-                for (Receptionable receptionable : receptionables) {
-                    receptionable.accept(new ReceptionableVisitorAdapter() {
-
-                        @Override
-                        public void visitRechargeReception(RechargeReception rechargeReception) {
-                            LOGGER.debug("{}", rechargeReception);
-                        }
-
-                        @Override
-                        public void visitActionReception(ActionReception actionReception) {
-                            LOGGER.debug("{}", actionReception);
-                        }
-
-                        @Override
-                        public void visitSMSReception(SMSReception smsReception) {
-                            LOGGER.debug("{}", smsReception);
-                        }
-                    });
+                for (ReceptionablePro receptionablePro : receptionables) {
+                    LOGGER.debug("{}", receptionablePro);
                 }
+
             }
-        });
+
+        };
+
+        LOGGER.debug("listener={}", listener);
+
+        new ReceptionClientPro(CLIENT_ID).onReception(filter, listener);
 
     }
 }
